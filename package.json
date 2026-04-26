@@ -1,0 +1,10 @@
+{
+  "name": "blc-invoice-portal",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "test": "npm test --prefix backend",
+    "start": "npm start --prefix backend",
+    "dev": "npm start --prefix backend"
+  }
+}

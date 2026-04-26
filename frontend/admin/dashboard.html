@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Admin Dashboard — BLC Portal</title>
+<link rel="stylesheet" href="/assets/css/style.css" />
+</head>
+<body>
+<div class="app-layout">
+
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-brand">
+      <img src="/assets/img/logo.png" alt="BLC Portal" style="width: 80%; max-width: 180px;" />
+    </div>
+
+    <nav class="sidebar-nav">
+      <div class="nav-section">
+        <div class="nav-section-label">Management</div>
+        <a href="/admin/dashboard.html" class="nav-item active">
+          <span class="nav-icon">📊</span>
+          <span>Dashboard</span>
+        </a>
+        <a href="/admin/invoices.html" class="nav-item">
+          <span class="nav-icon">📄</span>
+          <span>All Invoices</span>
+        </a>
+        <a href="/admin/users.html" class="nav-item">
+          <span class="nav-icon">👥</span>
+          <span>Trainers</span>
+        </a>
+        <a href="/admin/colleges.html" class="nav-item">
+          <span class="nav-icon">🏢</span>
+          <span>Colleges</span>
+        </a>
+      </div>
+    </nav>
+
+    <div class="sidebar-user">
+      <div class="user-avatar admin-badge" id="sidebar-avatar">A</div>
+      <div class="user-info">
+        <div class="user-name" id="sidebar-user-name">Admin</div>
+        <div class="user-role" id="sidebar-user-role">admin</div>
+      </div>
+      <button class="logout-btn" title="Logout" data-action="logout">⏻</button>
+    </div>
+  </aside>
+
+  <div class="sidebar-overlay" id="sidebar-overlay"></div>
+
+  <main class="main-content">
+    <header class="topbar">
+      <button class="menu-toggle" id="menu-toggle">☰</button>
+      <h1 class="topbar-title">Admin Overview</h1>
+      <div class="topbar-actions">
+        <a href="/admin/users.html" class="btn btn-primary btn-sm">+ New Trainer</a>
+      </div>
+    </header>
+
+    <div class="page-content">
+      <div class="stats-grid" id="stats-container">
+        <div class="stat-card">Loading...</div>
+      </div>
+
+      <div class="form-row cols-2">
+        <div class="card">
+          <div class="card-header">
+            <h3>Recent Invoices</h3>
+            <a href="/admin/invoices.html" style="font-size: 0.8rem;">View All →</a>
+          </div>
+          <div class="card-body">
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Invoice No.</th>
+                    <th>Trainer</th>
+                    <th>Amount</th>
+                    <th>Status</th>
+                  </tr>
+                </thead>
+                <tbody id="recent-invoices-body">
+                  <tr><td colspan="4" class="text-center text-muted">Loading...</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <h3>Pending Action Required</h3>
+          </div>
+          <div class="card-body" id="pending-action-body">
+            <div class="empty-state" style="padding: 40px 20px;">
+              <div class="empty-icon text-success">🎉</div>
+              <h3>All caught up!</h3>
+              <p>No invoices are currently pending review.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="card mt-4">
+          <div class="card-header">
+            <h3>System Admin Signature</h3>
+          </div>
+          <div class="card-body">
+            <p class="text-muted mb-4" style="font-size: 0.875rem;">
+              Upload the official Admin signature to automatically stamp approved invoices.
+            </p>
+            <div style="display: flex; gap: 15px; align-items: center; flex-wrap: wrap;">
+              <div id="admin-sig-container"
+                style="width: 250px; height: 100px; border: 1px dashed var(--border); border-radius: var(--radius-sm);
+                       display: flex; align-items: center; justify-content: center; background: var(--bg-card2); overflow: hidden;">
+                <span class="text-muted" style="font-size: 0.8rem;">Loading...</span>
+              </div>
+              <div>
+                <input type="file" id="admin-sig-file" accept="image/png, image/jpeg" style="display: none;"
+                  onchange="uploadAdminSignature(this)">
+                <button class="btn btn-primary btn-sm" onclick="document.getElementById('admin-sig-file').click()">
+                  Change Signature
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+</div>
+<script src="/assets/js/api.js"></script>
+<script src="/assets/js/pages/admin-dashboard.js"></script>
+</body>
+</html>

@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>New Invoice — BLC Trainer Portal</title>
+<link rel="stylesheet" href="/assets/css/style.css" />
+</head>
+<body>
+<div class="app-layout">
+
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-brand">
+      <img src="/assets/img/logo.png" alt="BLC Portal" style="width: 80%; max-width: 180px;" />
+    </div>
+
+    <nav class="sidebar-nav">
+      <div class="nav-section">
+        <div class="nav-section-label">Main Menu</div>
+        <a href="/trainer/dashboard.html" class="nav-item">
+          <span class="nav-icon">📊</span>
+          <span>Dashboard</span>
+        </a>
+        <a href="/trainer/new-invoice.html" class="nav-item active">
+          <span class="nav-icon">➕</span>
+          <span>New Invoice</span>
+        </a>
+        <a href="/trainer/invoices.html" class="nav-item">
+          <span class="nav-icon">📄</span>
+          <span>My Invoices</span>
+        </a>
+      </div>
+      <div class="nav-section">
+        <div class="nav-section-label">Account</div>
+        <a href="/trainer/profile.html" class="nav-item">
+          <span class="nav-icon">👤</span>
+          <span>Profile & Bank</span>
+        </a>
+      </div>
+    </nav>
+
+    <div class="sidebar-user">
+      <div class="user-avatar" id="sidebar-avatar">T</div>
+      <div class="user-info">
+        <div class="user-name" id="sidebar-user-name">Trainer</div>
+        <div class="user-role" id="sidebar-user-role">trainer</div>
+      </div>
+      <button class="logout-btn" title="Logout" data-action="logout">⏻</button>
+    </div>
+  </aside>
+
+  <div class="sidebar-overlay" id="sidebar-overlay"></div>
+
+  <main class="main-content">
+    <header class="topbar">
+      <button class="menu-toggle" id="menu-toggle">☰</button>
+      <div style="display: flex; align-items: center; gap: 12px; flex: 1;">
+        <a href="/trainer/dashboard.html" class="btn btn-ghost btn-sm">← Back</a>
+        <h1 class="topbar-title" style="margin: 0;">Create New Invoice</h1>
+      </div>
+    </header>
+
+    <div class="page-content">
+      <div id="profile-warning" class="alert alert-warning hidden">
+        <strong>Profile incomplete:</strong> Please add your Bank Details and PAN in your
+        <a href="/trainer/profile.html" style="text-decoration: underline;">Profile</a> before submitting.
+      </div>
+
+      <div class="card">
+        <form id="invoice-form" class="card-body">
+
+          <div class="form-section">
+            <h3 class="form-section-title">Invoice Details</h3>
+            <div class="form-row cols-2">
+              <div class="form-group">
+                <label>Training College / Client</label>
+                <select id="training_college" class="form-control" required>
+                  <option value="" disabled selected>Select College or Client...</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>Training Period</label>
+                <input type="text" id="training_period" class="form-control" placeholder="e.g. Aug 1 – Aug 10, 2024" required>
+              </div>
+              <div class="form-group">
+                <label>PO / WO No. (Optional)</label>
+                <input type="text" id="po_wo_no" class="form-control" placeholder="Purchase order number">
+              </div>
+              <div class="form-group">
+                <label>Place of Supply (State)</label>
+                <input type="text" id="place_of_supply" class="form-control" placeholder="e.g. Karnataka" required>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-section">
+            <div class="flex-between mb-4">
+              <h3 class="form-section-title mt-0 mb-0">Line Items</h3>
+              <button type="button" class="btn btn-ghost btn-sm" id="add-row-btn">+ Add Item</button>
+            </div>
+
+            <div class="table-wrap">
+              <table class="items-table" id="items-table">
+                <thead>
+                  <tr>
+                    <th width="40">S.No</th>
+                    <th>Training / Particulars</th>
+                    <th width="120">Date(s)</th>
+                    <th width="100">Hours/Days</th>
+                    <th width="120">Rate (₹)</th>
+                    <th width="80">Qty</th>
+                    <th width="120">Amount (₹)</th>
+                    <th width="50"></th>
+                  </tr>
+                </thead>
+                <tbody id="items-body"></tbody>
+              </table>
+            </div>
+
+            <div class="invoice-summary">
+              <div class="summary-row">
+                <span>Subtotal</span>
+                <span id="calc-subtotal">₹ 0.00</span>
+              </div>
+              <div class="summary-row total">
+                <span>Total Payable</span>
+                <span id="calc-total">₹ 0.00</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-section">
+            <h3 class="form-section-title">Remarks / Notes</h3>
+            <div class="form-group">
+              <textarea id="remarks" class="form-control" placeholder="Any additional notes for the admin..."></textarea>
+            </div>
+          </div>
+
+          <div class="flex-between mt-6">
+            <button type="button" class="btn btn-ghost" id="save-draft-btn">Save as Draft</button>
+            <button type="submit" class="btn btn-primary" id="submit-btn">Submit for Approval</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </main>
+
+</div>
+<script src="/assets/js/api.js"></script>
+<script src="/assets/js/pages/trainer-new-invoice.js"></script>
+</body>
+</html>

@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Profile — BLC Trainer Portal</title>
+<link rel="stylesheet" href="/assets/css/style.css" />
+</head>
+<body>
+<div class="app-layout">
+
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-brand">
+      <img src="/assets/img/logo.png" alt="BLC Portal" style="width: 80%; max-width: 180px;" />
+    </div>
+
+    <nav class="sidebar-nav">
+      <div class="nav-section">
+        <div class="nav-section-label">Main Menu</div>
+        <a href="/trainer/dashboard.html" class="nav-item">
+          <span class="nav-icon">📊</span>
+          <span>Dashboard</span>
+        </a>
+        <a href="/trainer/new-invoice.html" class="nav-item">
+          <span class="nav-icon">➕</span>
+          <span>New Invoice</span>
+        </a>
+        <a href="/trainer/invoices.html" class="nav-item">
+          <span class="nav-icon">📄</span>
+          <span>My Invoices</span>
+        </a>
+      </div>
+      <div class="nav-section">
+        <div class="nav-section-label">Account</div>
+        <a href="/trainer/profile.html" class="nav-item active">
+          <span class="nav-icon">👤</span>
+          <span>Profile & Bank</span>
+        </a>
+      </div>
+    </nav>
+
+    <div class="sidebar-user">
+      <div class="user-avatar" id="sidebar-avatar">T</div>
+      <div class="user-info">
+        <div class="user-name" id="sidebar-user-name">Trainer</div>
+        <div class="user-role" id="sidebar-user-role">trainer</div>
+      </div>
+      <button class="logout-btn" title="Logout" data-action="logout">⏻</button>
+    </div>
+  </aside>
+
+  <div class="sidebar-overlay" id="sidebar-overlay"></div>
+
+  <main class="main-content">
+    <header class="topbar">
+      <button class="menu-toggle" id="menu-toggle">☰</button>
+      <h1 class="topbar-title">Profile & Bank Details</h1>
+    </header>
+
+    <div class="page-content">
+
+      <div class="card">
+        <form id="profile-form" class="card-body">
+          <div class="form-section">
+            <h3 class="form-section-title">Personal Details</h3>
+            <div class="form-row cols-2">
+              <div class="form-group">
+                <label>Full Name</label>
+                <input type="text" id="name" class="form-control" required>
+              </div>
+              <div class="form-group">
+                <label>Email (Login ID)</label>
+                <input type="email" id="email" class="form-control" disabled>
+                <small class="text-muted">Contact admin to change email</small>
+              </div>
+              <div class="form-group">
+                <label>Phone Number</label>
+                <input type="text" id="phone" class="form-control" placeholder="+91-"
+                  pattern="^\+?[\d\s-]{10,15}$" title="Enter a valid phone number (10–15 digits)">
+              </div>
+              <div class="form-group">
+                <label>PAN Number</label>
+                <input type="text" id="pan" class="form-control" required
+                  pattern="[A-Z]{5}[0-9]{4}[A-Z]{1}" title="Enter valid PAN (ABCDE1234F)"
+                  oninput="this.value = this.value.toUpperCase()">
+              </div>
+            </div>
+            <div class="form-group">
+              <label>Full Address</label>
+              <textarea id="address" class="form-control" rows="2"></textarea>
+            </div>
+          </div>
+
+          <div class="form-section">
+            <h3 class="form-section-title">
+              Bank Details
+              <span class="text-muted" style="text-transform: none; font-weight: 400; font-size: 0.75rem;"> — for invoice generation</span>
+            </h3>
+            <div class="form-row cols-2">
+              <div class="form-group">
+                <label>Account Name (as per bank)</label>
+                <input type="text" id="bank_account_name" class="form-control" required>
+              </div>
+              <div class="form-group">
+                <label>Bank Name</label>
+                <input type="text" id="bank_name" class="form-control" required>
+              </div>
+              <div class="form-group">
+                <label>Account Number</label>
+                <input type="text" id="bank_account" class="form-control" required
+                  minlength="9" maxlength="18" pattern="\d{9,18}"
+                  title="Account number should be 9–18 digits">
+              </div>
+              <div class="form-group">
+                <label>IFSC Code</label>
+                <input type="text" id="ifsc" class="form-control" required
+                  pattern="[A-Z]{4}0[A-Z0-9]{6}" title="Enter valid IFSC (e.g. SBIN0001234)"
+                  oninput="this.value = this.value.toUpperCase()">
+              </div>
+              <div class="form-group">
+                <label>Branch</label>
+                <input type="text" id="branch" class="form-control" required>
+              </div>
+            </div>
+          </div>
+
+          <div class="flex-between mt-6">
+            <button type="submit" class="btn btn-primary" id="save-btn">Save Profile</button>
+          </div>
+        </form>
+      </div>
+
+      <div class="card">
+        <div class="card-body">
+          <h3 class="form-section-title">Digital Signature</h3>
+          <p class="text-muted mb-4" style="font-size: 0.875rem;">
+            Upload an image of your signature (PNG or JPG) to automatically stamp your invoices.
+          </p>
+          <div style="display: flex; gap: 15px; align-items: center; flex-wrap: wrap;">
+            <div id="sig-preview-container"
+              style="width: 250px; height: 100px; border: 1px dashed var(--border); border-radius: var(--radius-sm);
+                     display: flex; align-items: center; justify-content: center; background: var(--bg-card2); overflow: hidden;">
+              <span class="text-muted" style="font-size: 0.8rem;">No signature uploaded</span>
+            </div>
+            <div>
+              <input type="file" id="sig-file" accept="image/png, image/jpeg" style="display: none;"
+                onchange="uploadSignature(this)">
+              <button class="btn btn-primary btn-sm" onclick="document.getElementById('sig-file').click()">
+                Upload Signature
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+</div>
+<script src="/assets/js/api.js"></script>
+<script src="/assets/js/pages/trainer-profile.js"></script>
+</body>
+</html>

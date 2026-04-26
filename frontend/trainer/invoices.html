@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>My Invoices — BLC Trainer Portal</title>
+<link rel="stylesheet" href="/assets/css/style.css" />
+</head>
+<body>
+<div class="app-layout">
+
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-brand">
+      <img src="/assets/img/logo.png" alt="BLC Portal" style="width: 80%; max-width: 180px;" />
+    </div>
+
+    <nav class="sidebar-nav">
+      <div class="nav-section">
+        <div class="nav-section-label">Main Menu</div>
+        <a href="/trainer/dashboard.html" class="nav-item">
+          <span class="nav-icon">📊</span>
+          <span>Dashboard</span>
+        </a>
+        <a href="/trainer/new-invoice.html" class="nav-item">
+          <span class="nav-icon">➕</span>
+          <span>New Invoice</span>
+        </a>
+        <a href="/trainer/invoices.html" class="nav-item active">
+          <span class="nav-icon">📄</span>
+          <span>My Invoices</span>
+        </a>
+      </div>
+      <div class="nav-section">
+        <div class="nav-section-label">Account</div>
+        <a href="/trainer/profile.html" class="nav-item">
+          <span class="nav-icon">👤</span>
+          <span>Profile & Bank</span>
+        </a>
+      </div>
+    </nav>
+
+    <div class="sidebar-user">
+      <div class="user-avatar" id="sidebar-avatar">T</div>
+      <div class="user-info">
+        <div class="user-name" id="sidebar-user-name">Trainer</div>
+        <div class="user-role" id="sidebar-user-role">trainer</div>
+      </div>
+      <button class="logout-btn" title="Logout" data-action="logout">⏻</button>
+    </div>
+  </aside>
+
+  <div class="sidebar-overlay" id="sidebar-overlay"></div>
+
+  <main class="main-content">
+    <header class="topbar">
+      <button class="menu-toggle" id="menu-toggle">☰</button>
+      <h1 class="topbar-title">My Invoices</h1>
+      <div class="topbar-actions">
+        <a href="/trainer/new-invoice.html" class="btn btn-accent btn-sm">Create Invoice</a>
+      </div>
+    </header>
+
+    <div class="page-content">
+      <div class="filter-bar">
+        <div class="form-group">
+          <label>Status</label>
+          <select id="filter-status" class="form-control" onchange="loadInvoices()">
+            <option value="">All Statuses</option>
+            <option value="draft">Draft</option>
+            <option value="submitted">Submitted</option>
+            <option value="under_review">Under Review</option>
+            <option value="approved">Approved</option>
+            <option value="processing">Processing</option>
+            <option value="paid">Paid</option>
+            <option value="rejected">Rejected</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Invoice No.</th>
+                <th>Client / College</th>
+                <th>Date</th>
+                <th>Amount</th>
+                <th>Status</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="invoices-body">
+              <tr><td colspan="6" class="text-center text-muted">Loading...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </main>
+
+</div>
+
+<!-- Acknowledge & Sign Modal -->
+<div class="modal-overlay" id="ack-modal">
+  <div class="modal" style="max-width: 500px;">
+    <div class="modal-header">
+      <h3>Sign & Submit Invoice</h3>
+      <button class="modal-close" onclick="closeAckModal()">×</button>
+    </div>
+    <div class="modal-body">
+      <p style="margin-bottom: 20px;">
+        You are about to electronically sign and submit invoice
+        <strong><span id="ack-invoice-no"></span></strong> for approval.
+      </p>
+      <div style="background: var(--bg-card2); padding: 15px; border-radius: var(--radius-sm); border: 1px solid var(--border);">
+        <label style="display: flex; align-items: flex-start; gap: 10px; cursor: pointer;">
+          <input type="checkbox" id="ack-checkbox" onchange="toggleAckBlock()" style="margin-top: 4px;" />
+          <span style="font-size: 0.875rem; line-height: 1.5; color: var(--text);">
+            I hereby declare that the information provided in this invoice is accurate and that the
+            reported services were genuinely rendered. By checking this box, I authorize the insertion
+            of my digital signature onto the finalized PDF document.
+          </span>
+        </label>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-ghost" onclick="closeAckModal()">Cancel</button>
+      <button type="button" class="btn btn-success" id="ack-submit-btn" onclick="executeSubmit()" disabled>
+        Acknowledge & Sign
+      </button>
+    </div>
+  </div>
+</div>
+
+<script src="/assets/js/api.js"></script>
+<script src="/assets/js/pages/trainer-invoices.js"></script>
+</body>
+</html>

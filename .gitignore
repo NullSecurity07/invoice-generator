@@ -1,0 +1,8 @@
+node_modules/
+backend/node_modules/
+backend/.env
+backend/.env.production
+uploads/
+*.db
+*.db-shm
+*.db-wal

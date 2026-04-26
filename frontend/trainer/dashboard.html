@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Dashboard — BLC Trainer Portal</title>
+<link rel="stylesheet" href="/assets/css/style.css" />
+</head>
+<body>
+<div class="app-layout">
+
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-brand">
+      <img src="/assets/img/logo.png" alt="BLC Portal" style="width: 80%; max-width: 180px;" />
+    </div>
+
+    <nav class="sidebar-nav">
+      <div class="nav-section">
+        <div class="nav-section-label">Main Menu</div>
+        <a href="/trainer/dashboard.html" class="nav-item active">
+          <span class="nav-icon">📊</span>
+          <span>Dashboard</span>
+        </a>
+        <a href="/trainer/new-invoice.html" class="nav-item">
+          <span class="nav-icon">➕</span>
+          <span>New Invoice</span>
+        </a>
+        <a href="/trainer/invoices.html" class="nav-item">
+          <span class="nav-icon">📄</span>
+          <span>My Invoices</span>
+        </a>
+      </div>
+      <div class="nav-section">
+        <div class="nav-section-label">Account</div>
+        <a href="/trainer/profile.html" class="nav-item">
+          <span class="nav-icon">👤</span>
+          <span>Profile & Bank</span>
+        </a>
+      </div>
+    </nav>
+
+    <div class="sidebar-user">
+      <div class="user-avatar" id="sidebar-avatar">T</div>
+      <div class="user-info">
+        <div class="user-name" id="sidebar-user-name">Trainer</div>
+        <div class="user-role" id="sidebar-user-role">trainer</div>
+      </div>
+      <button class="logout-btn" title="Logout" data-action="logout">⏻</button>
+    </div>
+  </aside>
+
+  <div class="sidebar-overlay" id="sidebar-overlay"></div>
+
+  <main class="main-content">
+    <header class="topbar">
+      <button class="menu-toggle" id="menu-toggle">☰</button>
+      <h1 class="topbar-title">Dashboard</h1>
+      <div class="topbar-actions">
+        <button class="notif-btn" title="Notifications">
+          🔔<span class="notif-dot" id="notif-dot"></span>
+        </button>
+        <a href="/trainer/new-invoice.html" class="btn btn-accent btn-sm">Create Invoice</a>
+      </div>
+    </header>
+
+    <div class="page-content">
+      <div class="stats-grid" id="stats-container">
+        <div class="stat-card">Loading...</div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <h3>Recent Invoices</h3>
+          <a href="/trainer/invoices.html" style="font-size: 0.8rem;">View All →</a>
+        </div>
+        <div class="card-body">
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Invoice No.</th>
+                  <th>Date</th>
+                  <th>Amount</th>
+                  <th>Status</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="recent-invoices-body">
+                <tr><td colspan="5" class="text-center text-muted">Loading...</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+</div>
+<script src="/assets/js/api.js"></script>
+<script src="/assets/js/pages/trainer-dashboard.js"></script>
+</body>
+</html>

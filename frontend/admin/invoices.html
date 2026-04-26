@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>All Invoices — BLC Admin</title>
+<link rel="stylesheet" href="/assets/css/style.css" />
+</head>
+<body>
+<div class="app-layout">
+
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-brand">
+      <img src="/assets/img/logo.png" alt="BLC Portal" style="width: 80%; max-width: 180px;" />
+    </div>
+
+    <nav class="sidebar-nav">
+      <div class="nav-section">
+        <div class="nav-section-label">Management</div>
+        <a href="/admin/dashboard.html" class="nav-item">
+          <span class="nav-icon">📊</span>
+          <span>Dashboard</span>
+        </a>
+        <a href="/admin/invoices.html" class="nav-item active">
+          <span class="nav-icon">📄</span>
+          <span>All Invoices</span>
+        </a>
+        <a href="/admin/users.html" class="nav-item">
+          <span class="nav-icon">👥</span>
+          <span>Trainers</span>
+        </a>
+        <a href="/admin/colleges.html" class="nav-item">
+          <span class="nav-icon">🏢</span>
+          <span>Colleges</span>
+        </a>
+      </div>
+    </nav>
+
+    <div class="sidebar-user">
+      <div class="user-avatar admin-badge" id="sidebar-avatar">A</div>
+      <div class="user-info">
+        <div class="user-name" id="sidebar-user-name">Admin</div>
+        <div class="user-role" id="sidebar-user-role">admin</div>
+      </div>
+      <button class="logout-btn" title="Logout" data-action="logout">⏻</button>
+    </div>
+  </aside>
+
+  <div class="sidebar-overlay" id="sidebar-overlay"></div>
+
+  <main class="main-content">
+    <header class="topbar">
+      <button class="menu-toggle" id="menu-toggle">☰</button>
+      <h1 class="topbar-title">Invoice Management</h1>
+    </header>
+
+    <div class="page-content">
+      <div class="filter-bar">
+        <div class="form-group" style="flex: 1; min-width: 200px;">
+          <label>Search</label>
+          <input type="text" id="search" class="form-control" placeholder="Invoice no. or trainer name..."
+            oninput="debounceLoad()">
+        </div>
+        <div class="form-group">
+          <label>Status</label>
+          <select id="status" class="form-control" onchange="loadInvoices()">
+            <option value="">All Statuses</option>
+            <option value="draft">Draft</option>
+            <option value="submitted">Submitted</option>
+            <option value="under_review">Under Review</option>
+            <option value="approved">Approved</option>
+            <option value="processing">Processing</option>
+            <option value="paid">Paid</option>
+            <option value="rejected">Rejected</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>From Date</label>
+          <input type="date" id="from" class="form-control" onchange="loadInvoices()">
+        </div>
+        <div class="form-group">
+          <label>To Date</label>
+          <input type="date" id="to" class="form-control" onchange="loadInvoices()">
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Invoice No.</th>
+                <th>Trainer Name</th>
+                <th>Submitted Date</th>
+                <th>Amount</th>
+                <th>Status</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="invoices-body">
+              <tr><td colspan="6" class="text-center text-muted">Loading...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </main>
+
+</div>
+
+<!-- Status Update Modal -->
+<div class="modal-overlay" id="status-modal">
+  <div class="modal" style="max-width: 420px;">
+    <div class="modal-header">
+      <h3 id="status-modal-title">Update Invoice Status</h3>
+      <button class="modal-close" onclick="closeModal('status-modal')">×</button>
+    </div>
+    <form id="status-form">
+      <div class="modal-body">
+        <input type="hidden" id="s_id">
+        <div class="form-group">
+          <label>New Status</label>
+          <select id="s_status" class="form-control" required onchange="togglePaymentFields()">
+            <option value="under_review">Under Review</option>
+            <option value="approved">Approved (Ready to Pay)</option>
+            <option value="processing">Processing Payment</option>
+            <option value="paid">Paid successfully</option>
+            <option value="rejected">Rejected</option>
+          </select>
+        </div>
+        <div id="payment-fields" class="hidden">
+          <div class="form-group">
+            <label>Payment Date</label>
+            <input type="date" id="s_date" class="form-control">
+          </div>
+          <div class="form-group">
+            <label>Transaction ID / UTR No.</label>
+            <input type="text" id="s_ref" class="form-control" placeholder="e.g. UTR123456789">
+          </div>
+        </div>
+        <div class="form-group" style="display: flex; align-items: center; gap: 8px;">
+          <input type="checkbox" id="s_tds" style="width: auto;">
+          <label for="s_tds" style="margin-bottom: 0; text-transform: none; font-size: 0.875rem; letter-spacing: 0;">
+            Apply 10% TDS deduction
+          </label>
+        </div>
+        <div class="form-group">
+          <label>Remarks / Rejection Reason</label>
+          <textarea id="s_remarks" class="form-control" placeholder="Visible to trainer"></textarea>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-ghost" onclick="closeModal('status-modal')">Cancel</button>
+        <button type="submit" class="btn btn-primary" id="s_submit">Update Status</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script src="/assets/js/api.js"></script>
+<script src="/assets/js/pages/admin-invoices.js"></script>
+</body>
+</html>
