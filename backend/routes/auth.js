@@ -274,8 +274,24 @@ router.post('/profile/signature', authenticate, (req, res, next) => {
 });
 
 // GET /api/auth/signature-image/:filename
-router.get('/signature-image/:filename', authenticate, (req, res) => {
-  const filePath = path.join(__dirname, '../../uploads', req.params.filename);
+router.get('/signature-image/:filename', authenticate, async (req, res) => {
+  // Prevent path traversal: strip any directory components
+  const filename = path.basename(req.params.filename);
+  const uploadsDir = path.resolve(path.join(__dirname, '../../uploads'));
+  const filePath = path.resolve(path.join(uploadsDir, filename));
+
+  // Ensure resolved path is strictly inside uploads directory
+  if (!filePath.startsWith(uploadsDir + path.sep) && filePath !== uploadsDir) {
+    return res.status(400).json({ error: 'Invalid filename' });
+  }
+
+  // Ensure the requesting user owns this signature file
+  const userRow = await db.query('SELECT signature_path FROM users WHERE id = ?', [req.user.id]);
+  const isAdmin = ['admin', 'superadmin'].includes(req.user.role);
+  if (!isAdmin && (!userRow[0] || userRow[0].signature_path !== filename)) {
+    return res.status(403).json({ error: 'Access denied' });
+  }
+
   if (fs.existsSync(filePath)) {
     res.sendFile(filePath);
   } else {

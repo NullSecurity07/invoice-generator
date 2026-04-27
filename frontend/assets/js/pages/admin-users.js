@@ -51,6 +51,14 @@ window.loadUsers = async function() {
         tr.appendChild(statusCell);
         
         const actionsCell = document.createElement('td');
+        actionsCell.style.cssText = 'display:flex;gap:6px;flex-wrap:wrap;';
+
+        const resetPwBtn = document.createElement('button');
+        resetPwBtn.className = 'btn btn-ghost btn-sm';
+        resetPwBtn.textContent = 'Reset Password';
+        resetPwBtn.onclick = () => openResetPasswordModal(u.id, u.name);
+        actionsCell.appendChild(resetPwBtn);
+
         const toggleButton = document.createElement('button');
         toggleButton.className = 'btn btn-ghost btn-sm';
         toggleButton.textContent = u.is_active ? 'Deactivate' : 'Reactivate';
@@ -67,15 +75,22 @@ window.loadUsers = async function() {
 window.openModal = function(id) { document.getElementById(id).classList.add('open'); }
 window.closeModal = function(id) { document.getElementById(id).classList.remove('open'); }
 
-window.generatePassword = function() {
-  const length = 12;
+function generateSecurePassword() {
   const charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()";
-  let password = "";
-  for (let i = 0, n = charset.length; i < length; ++i) {
-      password += charset.charAt(Math.floor(Math.random() * n));
-  }
-  document.getElementById('c_password').value = password;
+  const array = new Uint8Array(12);
+  crypto.getRandomValues(array);
+  return Array.from(array, b => charset[b % charset.length]).join('');
 }
+
+window.generatePassword = function() {
+  document.getElementById('c_password').value = generateSecurePassword();
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  document.getElementById('rp_generate_btn').addEventListener('click', () => {
+    document.getElementById('rp_password').value = generateSecurePassword();
+  });
+});
 
 document.getElementById('create-form').addEventListener('submit', async(e) => {
   e.preventDefault();
@@ -97,6 +112,30 @@ document.getElementById('create-form').addEventListener('submit', async(e) => {
     e.target.reset();
     loadUsers();
   } catch(e) { showToast(e.message, 'error'); }
+  finally { btn.disabled = false; }
+});
+
+window.openResetPasswordModal = function(id, name) {
+  document.getElementById('rp_trainer_id').value = id;
+  document.getElementById('rp_trainer_name').textContent = name;
+  document.getElementById('rp_password').value = '';
+  openModal('reset-password-modal');
+}
+
+document.getElementById('reset-password-form').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const id = document.getElementById('rp_trainer_id').value;
+  const password = document.getElementById('rp_password').value;
+  const btn = document.getElementById('rp_submit');
+  btn.disabled = true;
+  try {
+    await apiFetch(`/admin/users/${id}/reset-password`, {
+      method: 'POST',
+      body: JSON.stringify({ password })
+    });
+    showToast('Password reset successfully', 'success');
+    closeModal('reset-password-modal');
+  } catch(e) { showToast(e.message || 'Failed to reset password', 'error'); }
   finally { btn.disabled = false; }
 });
 

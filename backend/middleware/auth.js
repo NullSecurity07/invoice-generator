@@ -1,4 +1,5 @@
 const jwt = require('jsonwebtoken');
+const db = require('../db');
 
 function authenticate(req, res, next) {
   let token;
@@ -24,6 +25,18 @@ function authenticate(req, res, next) {
 
   try {
     const payload = jwt.verify(token, process.env.JWT_SECRET);
+
+    let userRow;
+    try {
+      userRow = db.query('SELECT is_active FROM users WHERE id = ?', [payload.id]);
+    } catch (dbErr) {
+      console.error(`[Auth Middleware] DB error checking is_active for user ${payload.id}:`, dbErr.message);
+      return res.status(500).json({ error: 'Internal server error' });
+    }
+
+    if (!userRow[0] || !userRow[0].is_active) {
+      return res.status(401).json({ error: 'Account is deactivated' });
+    }
     req.user = payload;
     next();
   } catch (err) {

@@ -226,9 +226,11 @@ router.post('/users/:id/reset-password', ...isAdmin, async (req, res) => {
   try {
     const userRes = await db.query('SELECT * FROM users WHERE id = ?', [req.params.id]);
     if (userRes.length === 0) return res.status(404).json({ error: 'User not found' });
+    const user = userRes[0];
     const hash = bcrypt.hashSync(password, 12);
     await db.query('UPDATE users SET password_hash = ? WHERE id = ?', [hash, req.params.id]);
     await db.query('INSERT INTO audit_log (actor_id, action, entity, entity_id) VALUES (?,?,?,?)', [req.user.id, 'RESET_PASSWORD', 'users', req.params.id]);
+    await db.query('INSERT INTO notifications (user_id, message, type) VALUES (?,?,?)', [user.id, 'Your password has been reset by an admin. Please log in with your new credentials.', 'info']);
     res.json({ message: 'Password reset successfully' });
   } catch (err) {
     res.status(500).json({ error: 'Database error' });
@@ -314,7 +316,7 @@ router.patch('/invoices/:id/status', ...isAdmin, invoiceStatusValidation, async 
     }
 
     await db.query(`UPDATE invoices SET status = ?, remarks = COALESCE(?, remarks), tds_applicable = ?, tds_amount = ?, total = ?, amount_in_words = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?`,
-      [status, remarks || null, tds_applicable, tds_amount, total, amount_in_words, invoice.id]);
+      [status, remarks || null, tds_applicable ? 1 : 0, tds_amount, total, amount_in_words, invoice.id]);
 
     if (status === 'paid' && (payment_date || reference_number)) {
       await db.query(`INSERT INTO payments (invoice_id, status, payment_date, reference_number, paid_by) VALUES (?,?,?,?,?)`,

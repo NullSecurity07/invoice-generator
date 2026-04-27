@@ -131,6 +131,30 @@
       </div>
 
       <div class="card">
+        <form id="change-password-form" class="card-body">
+          <h3 class="form-section-title">Change Password</h3>
+          <div class="form-row cols-2">
+            <div class="form-group">
+              <label>Current Password</label>
+              <input type="password" id="cp_current" class="form-control" required placeholder="Enter current password">
+            </div>
+            <div class="form-group"></div>
+            <div class="form-group">
+              <label>New Password</label>
+              <input type="password" id="cp_new" class="form-control" required minlength="8" placeholder="Min 8 characters">
+            </div>
+            <div class="form-group">
+              <label>Confirm New Password</label>
+              <input type="password" id="cp_confirm" class="form-control" required minlength="8" placeholder="Repeat new password">
+            </div>
+          </div>
+          <div class="flex-between mt-6">
+            <button type="submit" class="btn btn-primary" id="cp-btn">Update Password</button>
+          </div>
+        </form>
+      </div>
+
+      <div class="card">
         <div class="card-body">
           <h3 class="form-section-title">Digital Signature</h3>
           <p class="text-muted mb-4" style="font-size: 0.875rem;">

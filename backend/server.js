@@ -75,9 +75,8 @@ app.use(cors({
     const host = (process.env.BACKEND_URL || '').replace(/\/$/, '');
     const isSelf = host && origin === host;
     const exactMatch = allowedOrigins.includes(origin);
-    const domainMatch = frontendEnv && origin.includes(frontendEnv.split('://')[1]);
-    
-    if (isSelf || exactMatch || domainMatch) {
+
+    if (isSelf || exactMatch) {
       callback(null, true);
     } else {
       callback(new Error('Not allowed by CORS'));

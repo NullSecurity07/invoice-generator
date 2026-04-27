@@ -81,4 +81,28 @@ document.getElementById('profile-form').addEventListener('submit', async (e) => 
   }
 });
 
+document.getElementById('change-password-form').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const newPw = document.getElementById('cp_new').value;
+  const confirm = document.getElementById('cp_confirm').value;
+  if (newPw !== confirm) { showToast('New passwords do not match', 'error'); return; }
+  const btn = document.getElementById('cp-btn');
+  btn.disabled = true;
+  try {
+    await apiFetch('/auth/change-password', {
+      method: 'PUT',
+      body: JSON.stringify({
+        current_password: document.getElementById('cp_current').value,
+        new_password: newPw
+      })
+    });
+    showToast('Password updated successfully', 'success');
+    e.target.reset();
+  } catch(err) {
+    showToast(err.message || 'Failed to update password', 'error');
+  } finally {
+    btn.disabled = false;
+  }
+});
+
 document.addEventListener('DOMContentLoaded', loadProfile);

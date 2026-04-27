@@ -146,6 +146,8 @@ module.exports = async (invoice, res) => {
   currentY += 12;
   doc.font('JetBrainsMono-Bold').text('Invoice Date: ', ML, currentY, {continued: true, lineBreak: false}).font('JetBrainsMono').text(invDate, {lineBreak: false});
   doc.font('JetBrainsMono-Bold').text('Due Date: ', ML + CW/2, currentY, {continued: true, lineBreak: false}).font('JetBrainsMono').text(invDate, {lineBreak: false});
+  currentY += 12;
+  doc.font('JetBrainsMono-Bold').text('Training College: ', ML, currentY, {continued: true, lineBreak: false}).font('JetBrainsMono').text(invoice.training_college || '—', {lineBreak: false});
   currentY += 22;
 
   // 6. Trainer Details
@@ -242,7 +244,8 @@ module.exports = async (invoice, res) => {
         doc.save();
         doc.font('JetBrainsMono-Bold').fontSize(8).fillColor('#1a237e').text('AUTHORIZED SIGNATORY', ML + CW - 180, sigBaseY, { align: 'right', width: 180, lineBreak: false });
         doc.image(aSig, ML + CW - 110, sigBaseY + 10, { height: 25 });
-        doc.font('JetBrainsMono').fillColor('#000000').text(adminQuery.name, ML + CW - 180, sigBaseY + 40, { align: 'right', width: 180, lineBreak: false });
+        doc.font('JetBrainsMono-Bold').fillColor('#000000').text('Vishal Vanaki', ML + CW - 180, sigBaseY + 40, { align: 'right', width: 180, lineBreak: false });
+        doc.font('JetBrainsMono').fillColor('#555555').text('Founder', ML + CW - 180, sigBaseY + 52, { align: 'right', width: 180, lineBreak: false });
         doc.restore();
       }
     }
